@@ -23,12 +23,11 @@ public class InventarioService {
     return entityManager
         .createQuery(
             """
-            select p
-            from ProductoInventario p
-            order by p.id
-            """,
-            ProductoInventario.class
-        )
+                select p
+                from ProductoInventario p
+                order by p.id
+                """,
+            ProductoInventario.class)
         .getResultList();
   }
 
@@ -54,12 +53,11 @@ public class InventarioService {
     List<ProductoInventario> resultado = entityManager
         .createQuery(
             """
-            select p
-            from ProductoInventario p
-            where p.codigo = :codigo
-            """,
-            ProductoInventario.class
-        )
+                select p
+                from ProductoInventario p
+                where p.codigo = :codigo
+                """,
+            ProductoInventario.class)
         .setParameter("codigo", codigo.trim())
         .setMaxResults(1)
         .getResultList();
@@ -79,7 +77,8 @@ public class InventarioService {
   }
 
   /**
-   * Variante recomendada para integración entre sistemas: usa un código de negocio estable.
+   * Variante recomendada para integración entre sistemas: usa un código de
+   * negocio estable.
    */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public ProductoInventario reservarStockPorCodigo(String codigo, int cantidad) {
@@ -102,13 +101,34 @@ public class InventarioService {
     } catch (IllegalStateException e) {
       throw new InventarioException(
           InventarioException.Tipo.STOCK_INSUFICIENTE,
-          e.getMessage()
-      );
+          e.getMessage());
     } catch (OptimisticLockException e) {
       throw new InventarioException(
           InventarioException.Tipo.CONFLICTO_CONCURRENCIA,
-          "El stock fue modificado por otra operación. Vuelva a consultar e intente nuevamente."
-      );
+          "El stock fue modificado por otra operación. Vuelva a consultar e intente nuevamente.");
+    }
+  }
+
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public ProductoInventario devolverStockPorCodigo(String codigo, int cantidad) {
+    return devolver(obtenerProductoPorCodigo(codigo), cantidad);
+  }
+
+  private ProductoInventario devolver(ProductoInventario producto, int cantidad) {
+    if (cantidad <= 0) {
+      throw datosInvalidos("La cantidad debe ser mayor que cero.");
+    }
+
+    try {
+      producto.devolverStock(cantidad);
+      entityManager.flush();
+      return producto;
+    } catch (IllegalArgumentException e) {
+      throw datosInvalidos(e.getMessage());
+    } catch (OptimisticLockException e) {
+      throw new InventarioException(
+          InventarioException.Tipo.CONFLICTO_CONCURRENCIA,
+          "El stock fue modificado por otra operación. Vuelva a consultar e intente nuevamente.");
     }
   }
 

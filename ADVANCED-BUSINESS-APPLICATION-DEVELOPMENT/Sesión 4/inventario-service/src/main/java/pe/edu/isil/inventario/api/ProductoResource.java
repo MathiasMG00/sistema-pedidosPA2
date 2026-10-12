@@ -13,6 +13,8 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
 import pe.edu.isil.inventario.domain.ProductoInventario;
+import pe.edu.isil.inventario.dto.DevolucionStockRequest;
+import pe.edu.isil.inventario.dto.DevolucionStockResponse;
 import pe.edu.isil.inventario.dto.ProductoResponse;
 import pe.edu.isil.inventario.dto.ReservaStockRequest;
 import pe.edu.isil.inventario.dto.ReservaStockResponse;
@@ -85,6 +87,22 @@ public class ProductoResource {
     return Response.ok(toReservaResponse(producto, request.getCantidad())).build();
   }
 
+  // Ruta para devolver stock de un producto por su código
+  @POST 
+  @Path ("/codigo/{codigo}/devoluciones")
+  public Response devolverPorCodigo(
+      @PathParam("codigo") String codigo,
+      @NotNull @Valid DevolucionStockRequest request
+  ) {
+    ProductoInventario producto = inventarioService.devolverStockPorCodigo(
+      codigo, 
+      request.getCantidad()
+    );
+    return Response.ok(toDevolucionResponse(producto, request.getCantidad())).build();
+  }
+
+
+
   private static ProductoResponse toResponse(ProductoInventario producto) {
     return new ProductoResponse(
         producto.getId(),
@@ -117,6 +135,21 @@ public class ProductoResource {
         cantidadReservada,
         producto.getStock(),
         producto.getVersion()
+    );
+  }
+
+  // Devuelve el DTO de respuesta para la devolución de stock
+  private static DevolucionStockResponse toDevolucionResponse(
+    ProductoInventario producto,
+    int cantidadDevuelta
+  ) {
+    return new DevolucionStockResponse(
+      producto.getId(),
+      producto.getCodigo(),
+      producto.getNombre(),
+      cantidadDevuelta,
+      producto.getStock(),
+      producto.getVersion()
     );
   }
 }
