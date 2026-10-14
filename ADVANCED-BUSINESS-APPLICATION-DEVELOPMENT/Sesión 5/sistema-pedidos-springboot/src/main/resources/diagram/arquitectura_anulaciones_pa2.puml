@@ -1,0 +1,27 @@
+@startuml
+skinparam componentStyle rectangle
+
+actor "Usuario / Postman" as usuario
+
+component "AnulacionPedidoApiController\nSpring REST" as api
+component "AnulacionPedidoServiceImpl\n@Service / @Transactional" as service
+component "DevolucionStockClient\nDevolucionStockRestClient" as client
+
+component "PedidoRepository\nAnulacionPedidoRepository" as repository
+database "H2\npedidosdb" as h2
+
+component "ProductoResource\nJakarta REST" as inventarioApi
+component "InventarioService\n@Stateless" as inventarioService
+database "SQL Server\nInventarioDB" as sql
+
+usuario --> api : HTTP + JSON
+api --> service : Constructor Injection
+service --> repository : Constructor Injection
+repository --> h2 : JPA
+
+service --> client : Constructor Injection
+client --> inventarioApi : HTTP + JSON\nPOST devoluciones
+inventarioApi --> inventarioService : @EJB
+inventarioService --> sql : JPA / InventarioDS
+
+@enduml
