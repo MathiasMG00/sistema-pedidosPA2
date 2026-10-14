@@ -1,7 +1,7 @@
 package com.isil.edu.pe.spedidos.service.impl;
 
 import com.isil.edu.pe.spedidos.client.InventarioClient;
-import com.isil.edu.pe.spedidos.client.InventarioClientException;
+import com.isil.edu.pe.spedidos.client.ClientException;
 import com.isil.edu.pe.spedidos.client.InventarioNoDisponibleException;
 import com.isil.edu.pe.spedidos.client.dto.ProductoInventarioResponse;
 import com.isil.edu.pe.spedidos.client.dto.ReservaStockResponse;
@@ -128,7 +128,7 @@ public class PedidoServiceImpl implements PedidoService {
 
     try {
       reserva = inventarioClient.reservarStock(productoCodigo.trim(), cantidad);
-    } catch (InventarioClientException e) {
+    } catch (ClientException e) {
       /*
        * Los errores 5xx corresponden a fallos técnicos del servicio remoto
        * y no deben presentarse como un error de datos ingresados por el usuario.

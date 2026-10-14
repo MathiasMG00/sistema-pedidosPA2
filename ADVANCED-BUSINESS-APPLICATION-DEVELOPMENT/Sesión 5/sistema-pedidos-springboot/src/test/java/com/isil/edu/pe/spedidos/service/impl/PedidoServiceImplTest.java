@@ -10,7 +10,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import com.isil.edu.pe.spedidos.client.InventarioClient;
-import com.isil.edu.pe.spedidos.client.InventarioClientException;
+import com.isil.edu.pe.spedidos.client.ClientException;
 import com.isil.edu.pe.spedidos.client.InventarioNoDisponibleException;
 import com.isil.edu.pe.spedidos.client.dto.ReservaStockResponse;
 import com.isil.edu.pe.spedidos.entity.Pedido;
@@ -108,7 +108,7 @@ class PedidoServiceImplTest {
    */
   @Test
   void debeConservarCausaDelErrorFuncionalDeInventario() {
-    InventarioClientException causa = new InventarioClientException(
+    ClientException causa = new ClientException(
         409,
         "Stock insuficiente."
     );
@@ -132,7 +132,7 @@ class PedidoServiceImplTest {
    */
   @Test
   void debeTratarError5xxComoServicioNoDisponible() {
-    InventarioClientException causa = new InventarioClientException(
+    ClientException causa = new ClientException(
         500,
         "Error interno de inventario."
     );

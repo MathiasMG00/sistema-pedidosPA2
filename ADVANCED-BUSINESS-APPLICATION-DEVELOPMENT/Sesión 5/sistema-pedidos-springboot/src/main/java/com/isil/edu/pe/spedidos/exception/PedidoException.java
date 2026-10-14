@@ -67,4 +67,20 @@ public class PedidoException extends RuntimeException {
   public PedidoException(String message, Throwable cause) {
     super(message, cause);
   }
+
+  // Añadimos lo necesario para Anulaciones
+  public enum TipoAnulacion {
+    DATOS_INVALIDOS,
+    PEDIDO_NO_EXISTE,
+    PEDIDO_YA_ANULADO
+  }
+  private TipoAnulacion tipo;
+
+  public PedidoException(TipoAnulacion tipoAnulacion, String menssage) {
+    super(menssage);
+    this.tipo = tipoAnulacion;
+  }
+  public TipoAnulacion getTipo() {
+    return tipo;
+  }
 }

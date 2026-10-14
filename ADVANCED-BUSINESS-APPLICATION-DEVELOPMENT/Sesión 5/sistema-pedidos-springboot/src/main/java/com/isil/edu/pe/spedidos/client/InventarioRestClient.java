@@ -218,7 +218,7 @@ public class InventarioRestClient implements InventarioClient {
    *         {@code inventario-service}; nunca devuelve
    *         {@code null}
    *
-   * @throws InventarioClientException si el servicio remoto
+   * @throws ClientException si el servicio remoto
    *         responde con un error HTTP
    * @throws InventarioNoDisponibleException si no es posible
    *         comunicarse con el servicio remoto
@@ -291,7 +291,7 @@ public class InventarioRestClient implements InventarioClient {
    *
    * @return información resultante de la reserva de stock
    *
-   * @throws InventarioClientException si
+   * @throws ClientException si
    *         {@code inventario-service} responde con un código
    *         HTTP de error
    * @throws InventarioNoDisponibleException si no es posible
@@ -346,7 +346,7 @@ public class InventarioRestClient implements InventarioClient {
    * {@link ApiError}. Si el servicio proporcionó un mensaje de
    * error válido, dicho mensaje reemplaza al mensaje genérico.</p>
    *
-   * <p>Finalmente se genera un {@link InventarioClientException}
+   * <p>Finalmente se genera un {@link ClientException}
    * que abstrae al resto de la aplicación de los detalles propios
    * de {@link RestClient}.</p>
    *
@@ -356,7 +356,7 @@ public class InventarioRestClient implements InventarioClient {
    * @return excepción de integración que contiene el código HTTP
    *         y el mensaje de error obtenido del servicio remoto
    */
-  private InventarioClientException convertirError(RestClientResponseException e) {
+  private ClientException convertirError(RestClientResponseException e) {
     String mensaje = "inventario-service respondió HTTP " + e.getStatusCode().value() + ".";
 
     try {
@@ -371,7 +371,7 @@ public class InventarioRestClient implements InventarioClient {
        */
     }
 
-    return new InventarioClientException(e.getStatusCode().value(), mensaje);
+    return new ClientException(e.getStatusCode().value(), mensaje);
   }
 
   /**
