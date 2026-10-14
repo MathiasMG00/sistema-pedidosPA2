@@ -1,6 +1,7 @@
 # Cambios realizados en *inventario-service* 
 
 ## Requisitos
+
 Implementar el endpoint REST de devolución de stock de un producto.
 
 ## Modificaciones
@@ -15,17 +16,20 @@ Implementar el endpoint REST de devolución de stock de un producto.
 | `pom.xml` | Se agregó la dependencia del controlador JDBC de SQL Server. |
 
 ## Endpoint de devolución
+
 POST `/inventario-service/api/inventario/productos/codigo/{codigo}/devoluciones`
 
-Solicitud:
-```json
+Formato de solicitud:
+```http
+Content-Type: application/json
 {
   "cantidad": 2
 }
 ```
+
 Ejemplo: 
 ```
-Teniendo los siguientes datos.
+Teniendo los siguientes datos para devolución.
 codigo = 'LAP-001' 
 cantidad = 2
 ```
@@ -55,4 +59,3 @@ Comando de ejecución desde la raíz del proyecto:
 ```powershell
 mvn test
 ```
-
